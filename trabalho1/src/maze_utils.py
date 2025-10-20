@@ -91,14 +91,14 @@ def print_maze(matriz, visited=set(), path=[]):
         linha = ""
         for j, val in enumerate(row):
             if (i, j) in path:
-                linha += "*"
+                linha += "🟩"  # caminho solução
             elif (i, j) in visited:
-                linha += "*"
+                linha += "🟦"  # caminho explorado
             elif val == 1:
-                linha += "#"
+                linha += "⬛"  # parede
             else:
-                linha += "."
+                linha += "⬜"  # espaço livre
         print(linha)
     print("\n")
 
-    
+
