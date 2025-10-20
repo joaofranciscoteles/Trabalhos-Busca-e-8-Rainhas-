@@ -46,20 +46,44 @@ def is_valid_move(visited,row,col,matriz):
     return True
 
 def medir_desempenho(nome, func, *args):
+    
     print(f"\n=== {nome} ===")
     inicio = time.time()
-    path, nos_expandidos = func(*args)
+
+    resultado = func(*args)
     fim = time.time()
     tempo = fim - inicio
 
-    if path:
-            print("Caminho Encontrado")
+    # Tratamento flexível (compatível com funções antigas)
+    if len(resultado) == 3:
+        path, nos_expandidos, max_mem = resultado
     else:
-            print("Nenhum caminho encontrado.")
-    
+        path, nos_expandidos = resultado
+        max_mem = None
+
+    # Métricas básicas
+    if path:
+        custo = len(path) - 1
+        print("✅ Caminho encontrado!")
+        print(f"Custo da solução: {custo}")
+    else:
+        custo = None
+        print(" Nenhum caminho encontrado.")
+
+    # Exibição das métricas
     print(f"Nós expandidos: {nos_expandidos}")
+    if max_mem is not None:
+        print(f"Memória máxima (fronteira + visitados): {max_mem}")
     print(f"Tempo de execução: {tempo:.4f} segundos")
-    print("=========================")
+    print("=========================\n")
+
+    return {
+        "algoritmo": nome,
+        "tempo": tempo,
+        "nos_expandidos": nos_expandidos,
+        "memoria_max": max_mem,
+        "custo": custo
+    }
 
 
 def print_maze(matriz, visited=set(), path=[]):

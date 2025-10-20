@@ -12,17 +12,21 @@ def gbfs(maze,start, goal, heuristic):
     fronteir.put((heuristic(start,goal),start,[start]))
 
     visited = set()
+    
+    max_mem = 1
 
     while not fronteir.empty():
         
+        max_mem = max(max_mem, fronteir.qsize() + len(visited))
+
         cost, cell, path = fronteir.get()
 
         nos_expandidos+=1
 
         if cell == goal:
-            print("Caminho Encontrado!",cell[0],cell[1])
+            print("Caminho Encontrado!"," Posições:",cell[0],cell[1])
             mu.print_maze(maze, visited, path)
-            return path,nos_expandidos
+            return path,nos_expandidos, max_mem
         
         visited.add(cell)
         
@@ -37,6 +41,6 @@ def gbfs(maze,start, goal, heuristic):
                 fronteir.put((new_cost, (adjx,adjy), path + [(adjx,adjy)]))
                 
     print("Nenhum caminho encontrado.")
-    return None,nos_expandidos
+    return None,nos_expandidos, max_mem
 
     
