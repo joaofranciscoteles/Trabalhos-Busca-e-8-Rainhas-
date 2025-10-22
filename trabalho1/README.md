@@ -120,7 +120,7 @@ Os arquivos `.txt` devem seguir este formato:
 
 ## ▶️ Execução
 
-Com as dependências instaladas e os labirintos na pasta `data/`, basta executar o script principal a partir da pasta `src/`.
+Com as dependências instaladas e o labirinto na pasta `data/`, basta executar o script principal a partir da pasta `src/`.
 
 ```Bash
 
