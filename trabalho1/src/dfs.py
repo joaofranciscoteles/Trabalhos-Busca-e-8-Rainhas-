@@ -8,33 +8,43 @@ def dfs(matriz, start, goal):
         return [start], 0, 1
 
     nos_expandidos = 0
-    dRow = [-1, 0, 1, 0]
-    dCol = [0, 1, 0, -1]
+    
+    
+    dRow = [0, 0, 1, -1]
+    dCol = [-1, 1, 0, 0]
+   
 
-    fronteira = [(start, [start])]
-    visitados = set()
+    fronteir = [(start, [start])]
+    visited = set()
     max_mem = 1
 
-    while fronteira:
+    while fronteir:
         
-        max_mem = max(max_mem, len(fronteira) + len(visitados))
-        cell, path = fronteira.pop()   # Pilha → remove último
+        max_mem = max(max_mem, len(fronteir) + len(visited))
+        cell, path = fronteir.pop()   # Pilha → remove último
         nos_expandidos += 1
-        visitados.add(cell)
-
+        
+        visited.add((cell))
+        
+        # --- VISUALIZAÇÃO ---
+        #mu.print_maze(matriz, visited, path)
+        # ---------------------
+       
+        
         x, y = cell
         for i in range(4):
             adjx = x + dRow[i]
             adjy = y + dCol[i]
 
-            if mu.is_valid_move(visitados, adjx, adjy, matriz):
+            if mu.is_valid_move(visited, adjx, adjy, matriz):
+                
                 novo_caminho = path + [(adjx, adjy)]
                 if (adjx, adjy) == goal:
                     print("Caminho Encontrado!", adjx, adjy)
-                    mu.print_maze(matriz, visitados, novo_caminho)
+                    mu.print_maze(matriz, visited, novo_caminho)
                     return novo_caminho, nos_expandidos, max_mem
 
-                fronteira.append(((adjx, adjy), novo_caminho))
+                fronteir.append(((adjx, adjy), novo_caminho))
 
     print("Nenhum caminho encontrado.")
     return None, nos_expandidos, max_mem

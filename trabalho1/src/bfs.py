@@ -10,8 +10,8 @@ def bfs(matriz,start,goal):
 
     nos_expandidos=0
 
-    dRow = [ -1, 0, 1, 0]
-    dCol = [ 0, 1, 0, -1]
+    dRow = [-1, 1, 0, 0]
+    dCol = [0, 0, 1, -1]
 
     fronteir = deque([(start, [start])])
     visited=set()
@@ -25,7 +25,12 @@ def bfs(matriz,start,goal):
 
         cell, path = fronteir.popleft()
         nos_expandidos += 1
-        visited.add(cell)
+        
+       
+       # --- VISUALIZAÇÃO ---
+       # mu.print_maze(matriz, visited, path)
+       # ---------------------
+       
        
         x=cell[0]
         y=cell[1]
@@ -34,6 +39,7 @@ def bfs(matriz,start,goal):
             adjx=x+dRow[i]
             adjy=y+dCol[i]
             if(mu.is_valid_move(visited,adjx,adjy,matriz)):
+                visited.add((adjx, adjy))
                 if (adjx, adjy) == goal:
                     path_final=path + [(adjx, adjy)]
                     print("Caminho Encontrado!"," Posições:",adjx,adjy)

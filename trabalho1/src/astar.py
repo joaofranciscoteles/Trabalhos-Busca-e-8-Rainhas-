@@ -18,13 +18,17 @@ def astar(matriz, start, goal, heuristic):
         max_mem = max(max_mem, fronteira.qsize() + len(visitados))
         f, g, cell, path = fronteira.get()
         nos_expandidos += 1
-
+        
+        visitados.add((cell))
+        
         if cell == goal:
             print("Caminho Encontrado!", cell[0], cell[1])
             mu.print_maze(matriz, visitados, path)
             return path, nos_expandidos, max_mem
 
-        visitados.add(cell)
+        # --- VISUALIZAÇÃO ---
+        #mu.print_maze(matriz, visitados, path)
+        # ---------------------
 
         x, y = cell
         for i in range(4):
@@ -32,6 +36,7 @@ def astar(matriz, start, goal, heuristic):
             adjy = y + dCol[i]
 
             if mu.is_valid_move(visitados, adjx, adjy, matriz):
+                
                 g_novo = g + 1
                 h_novo = heuristic((adjx, adjy), goal)
                 f_novo = g_novo + h_novo
