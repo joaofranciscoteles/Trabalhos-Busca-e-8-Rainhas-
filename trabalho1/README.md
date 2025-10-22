@@ -140,7 +140,7 @@ Para testagem do projeto, foram utilizadas 2 máquinas que rodaram o cógido em 
 | Máquina | Processador            | Memória RAM | Sistema Operacional |
 |------------------|------------------------|-------------|---------------------|
 | ACER NITRO 5 |Intel(R) Core(TM) i5-12450H    | 16 GB       | Windows 10     |
-| Acer Aspire A515-54    | Intel64 Family 6 Model 142 Stepping 12 GenuineIntel ~1609 MHz       | 8 GB        | Windows 11       |
+| Acer Aspire A515-54    | Intel(R) Core(TM) i5-10210U    | 8 GB        | Windows 11       |
 
 
 ---
