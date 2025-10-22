@@ -2,8 +2,9 @@
 
 Este repositório armazena os projetos práticos desenvolvidos para a disciplina **G05IART0.02 - Inteligência Artificial**, lecionada pelo **Prof. Tiago Alves de Oliveira** no Centro Federal de Educação Tecnológica de Minas Gerais (CEFET-MG), Campus Divinópolis.
 
-[![Linguagem][python-badge]][python-url]
 [![Instituição][cefet-badge]][cefet-url]
+[![IDE][vscode-badge]][vscode-url]
+[![Linguagem][python-badge]][python-url]
 
 ## 🎯 Sobre os Projetos
 
@@ -45,11 +46,12 @@ Trabalho desenvolvido em dupla pelos seguintes alunos:
 
 </div>
 
-[python-badge]: https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white
-[python-url]: https://www.python.org/
-
-[cefet-badge]: https://img.shields.io/badge/CEFET--MG-004A8D?style=for-the-badge&logo=cefetmg&logoColor=white
+[cefet-badge]: https://img.shields.io/badge/CEFET--MG-Campus%20V-blue?logo=academia
 [cefet-url]: https://www.cefetmg.br/
+[vscode-badge]: https://img.shields.io/badge/VSCode-1.86-blue?logo=visualstudiocode
+[vscode-url]: https://code.visualstudio.com/
+[python-badge]: https://img.shields.io/badge/Python-3.10-yellow?logo=python
+[python-url]: https://www.python.org/
 
 
 [gmail-badge]: https://img.shields.io/badge/-Gmail-D14836?style=for-the-badge&logo=Gmail&logoColor=white
