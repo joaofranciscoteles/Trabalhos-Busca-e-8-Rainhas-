@@ -71,11 +71,28 @@ def gerar_graficos(resultados, pasta_saida, titulo_extra=""):
     def plot_bar(y, titulo, ylabel, nome_arquivo):
         plt.figure(figsize=(9, 5))
         plt.bar(nomes, y, color=cores[:len(nomes)])
+        
+        # --- NOVO CÓDIGO PARA ADICIONAR RÓTULOS ---
+        for i, valor in enumerate(y):
+            # Formata como float (4 casas) se for tempo, senão como inteiro
+            if isinstance(valor, float):
+                label_texto = f"{valor:.4f}"
+            else:
+                label_texto = f"{valor}"
+            
+            # Adiciona o texto acima da barra
+            plt.text(i, valor, label_texto, ha='center', va='bottom', fontsize=9)
+        # --- FIM DO NOVO CÓDIGO ---
+            
         plt.title(f"{titulo} {titulo_extra}", fontsize=13, fontweight='bold')
         plt.ylabel(ylabel)
         plt.xlabel("Algoritmo")
         plt.xticks(rotation=30, ha="right")
         plt.grid(axis="y", linestyle="--", alpha=0.6)
+        
+        # Ajusta o limite Y para dar espaço para os rótulos
+        plt.ylim(top=plt.ylim()[1] * 1.1) 
+        
         plt.tight_layout()
         plt.savefig(f"{pasta_saida}/{nome_arquivo}.png", dpi=300)
         plt.close()
@@ -84,7 +101,7 @@ def gerar_graficos(resultados, pasta_saida, titulo_extra=""):
     plot_bar(tempos, "Tempo de Execução", "Tempo (s)", "tempo_execucao")
     plot_bar(expandidos, "Nós Expandidos", "Quantidade", "nos_expandidos")
     plot_bar(memoria, "Memória Máxima", "Nós armazenados", "memoria_maxima")
-    plot_bar(custo, "Custo do Caminho", "Passos até o objetivo", "custo_caminho")
+    plot_bar(custo, "Custo do Caminho", "Passos até o objetivo", "costo_caminho")
 
     print(f"✅ Gráficos salvos em: {pasta_saida}/")
 
