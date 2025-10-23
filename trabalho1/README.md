@@ -102,7 +102,7 @@ Trabalho1/
 |   |    ├── tempo_execucao.png
 |
 ├── .gitignore
-├── trabalho1_<BrunoPrado,JoãoFrancisco>.pdf
+├── trabalho1__BrunoPrado_JoãoFrancisco_.pdf
 ├── README.md 
 └── requirements.txt
 
