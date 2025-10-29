@@ -160,14 +160,6 @@ Trabalho desenvolvido em dupla pelos seguintes alunos:
 
 ---
 
-## 📚 Referências
-
-- Russell, S. J., & Norvig, P. (2021). *Artificial Intelligence: A Modern Approach (4th ed.)*. Pearson.  
-- AIMA Python Repository — https://github.com/aimacode/aima-python  
-- Notas de aula: Prof. Tiago Alves de Oliveira, CEFET-MG (2025/2).  
-- Wikipedia: *Eight Queens Puzzle* e *Hill Climbing Algorithm*.
-
----
 
 [gmail-badge]: https://img.shields.io/badge/-Gmail-D14836?style=for-the-badge&logo=Gmail&logoColor=white  
 [gmail-bruno]: mailto:bruno.santos@aluno.cefetmg.br  
