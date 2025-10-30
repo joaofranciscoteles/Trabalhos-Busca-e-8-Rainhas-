@@ -70,7 +70,7 @@ Trabalho2/
 ├── src/
 │   ├── eight_queens.py      # Representação do tabuleiro e operadores
 │   ├── hill_climbing.py     # Algoritmos Hill Climbing e variações
-│   └── main.py              # Execução, métricas e geração de gráficos
+│   └── run_analysis.py      # Execução, métricas e geração de gráficos
 │
 ├── resultados/              # (gerados automaticamente)
 │
