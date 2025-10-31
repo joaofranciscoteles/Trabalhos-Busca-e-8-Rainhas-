@@ -16,7 +16,7 @@ O objetivo do projeto é **resolver o problema das 8 Rainhas** utilizando o algo
 
 ## 🧠 Visão Geral do Funcionamento
 
-O script principal do repositório é o arquivo `main.py` (localizado na pasta `src/`).  
+O script principal do repositório é o arquivo `run_analysis.py` (localizado na pasta `src/`).  
 Ao executá-lo, o programa:
 
 1. Gera automaticamente um **tabuleiro inicial aleatório** representando a posição das 8 rainhas;  
@@ -26,7 +26,8 @@ Ao executá-lo, o programa:
    - Tempo de execução;
    - Número de iterações;
    - Taxa de sucesso (% de execuções que encontraram solução);
-5. Exibe os resultados no terminal e gera **gráficos comparativos** das métricas.
+5. Exibe os resultados no terminal;
+6. Gera, salva e exibe **gráficos comparativos** das métricas.
 
 ---
 
@@ -105,19 +106,19 @@ Com as dependências instaladas, execute o script principal a partir da pasta `s
 
 ```bash
 # Linux/macOS
-python3 main.py
+python3 run_analysis.py
 
 # Windows
-python main.py
+python run_analysis.py
 # ou
-py main.py
+py run_analysis.py
 ```
 
 Durante a execução, o programa:
 - Mostra o tabuleiro inicial e o número de conflitos;  
 - Executa todas as variações de Hill Climbing;  
 - Exibe o resultado final de cada uma (com conflitos, iterações e tempo);  
-- Gera gráficos comparando as métricas de desempenho.
+- Gera, salva e exibe gráficos comparando as métricas de desempenho.
 
 ---
 
