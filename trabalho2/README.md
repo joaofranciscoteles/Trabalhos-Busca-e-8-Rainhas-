@@ -68,12 +68,19 @@ pip install -r requirements.txt
 ```markdown
 Trabalho2/
 ├── src/
-│   ├── eight_queens.py      # Representação do tabuleiro e operadores
-│   ├── hill_climbing.py     # Algoritmos Hill Climbing e variações
-│   └── run_analysis.py      # Execução, métricas e geração de gráficos
+│   ├── eight_queens.py     
+│   ├── hill_climbing.py    
+│   └── run_analysis.py      
 │
-├── resultados/              # (gerados automaticamente)
+├── resultados/
+│   ├── demo_conflitos.png
+│   ├── demo_iteracoes.png
+│   ├── demo_tempo.png
+│   ├── exp_iteracoes_medias.png
+│   ├── exp_taxa_sucesso.png
+│   ├── exp_tempo_medio.png          
 │
+├── .gitignore
 ├── README.md
 ├── relatorio.pdf
 └── requirements.txt
