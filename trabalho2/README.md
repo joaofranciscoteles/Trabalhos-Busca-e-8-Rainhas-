@@ -83,7 +83,7 @@ Trabalho2/
 │
 ├── .gitignore
 ├── README.md
-├── relatorio.pdf
+├── trabalho2__BrunoPrado_JoãoFrancisco_.pdf
 └── requirements.txt
 ```
 
