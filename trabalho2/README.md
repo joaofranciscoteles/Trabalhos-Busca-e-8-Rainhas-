@@ -22,12 +22,13 @@ Ao executá-lo, o programa:
 1. Gera automaticamente um **tabuleiro inicial aleatório** representando a posição das 8 rainhas;  
 2. Avalia o número de **conflitos (ataques entre rainhas)**;  
 3. Executa as três variações do algoritmo Hill Climbing;  
-4. Mede e coleta métricas para cada execução:
-   - Tempo de execução;
-   - Número de iterações;
+4. Mede e coleta métricas estatísticas (baseado em N=30 execuções):
    - Taxa de sucesso (% de execuções que encontraram solução);
-5. Exibe os resultados no terminal;
-6. Gera, salva e exibe **gráficos comparativos** das métricas.
+   - Tempo médio de execução (com desvio padrão);
+   - Número médio de iterações (com desvio padrão);
+   - Número médio de reinícios (para a variação Random-Restart).
+5. Exibe os resultados estatísticos no terminal (formatado como Média ± Desvio Padrão);
+6. Gera, salva e exibe **gráficos comparativos** das métricas, incluindo barras de erro para o desvio padrão.
 
 ---
 
@@ -79,7 +80,8 @@ Trabalho2/
 │   ├── demo_tempo.png
 │   ├── exp_iteracoes_medias.png
 │   ├── exp_taxa_sucesso.png
-│   ├── exp_tempo_medio.png          
+│   ├── exp_tempo_medio.png
+│   └── exp_restarts_medio.png      
 │
 ├── .gitignore
 ├── README.md
@@ -115,24 +117,26 @@ py run_analysis.py
 ```
 
 Durante a execução, o programa:
-- Mostra o tabuleiro inicial e o número de conflitos;  
-- Executa todas as variações de Hill Climbing;  
-- Exibe o resultado final de cada uma (com conflitos, iterações e tempo);  
-- Gera, salva e exibe gráficos comparando as métricas de desempenho.
+- Mostra os resultados da execução única (Demo com seed=42);
+- Executa os 30 experimentos (com barra de progresso);
+- Exibe uma tabela de **Resultados Estatísticos** no console, contendo (Média ± Desvio Padrão) para Tempo, Iterações e Reinícios.
+- Gera, salva e exibe os gráficos de barra com os resultados estatísticos.
 
 ---
 
 ## 📈 Métricas e Gráficos
 
-Ao final da execução, são exibidos gráficos de:
+Ao final da execução, são exibidos os gráficos das métricas (separados entre Demo e Experimentos):
 
-- **Conflitos finais por variação**  
-- **Iterações médias**  
-- **Tempo médio de execução**  
-- **Taxa de sucesso (%)**
-
-Esses resultados permitem comparar a eficiência das três abordagens.
-
+- **Resultados da Demo (N=1, seed=42)**:
+    - Conflitos finais por variação
+    - Iterações por variação
+    - Tempo de execução
+- **Resultados Estatísticos (N=30)**:
+    - **Taxa de Sucesso (%)**: Compara a eficácia (quantas vezes achou a solução).
+    - **Tempo Médio de Execução (s)**: Compara o custo computacional (inclui barras de erro para o desvio padrão).
+    - **Iterações Médias**: Compara o número de passos da busca (inclui barras de erro para o desvio padrão).
+    - **Média de Reinícios**: Mostra o custo médio (com desvio padrão) pago pela variação "Reinício Aleatório" para atingir 100% de sucesso.
 ---
 
 ## 💻 Máquinas de Teste
