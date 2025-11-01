@@ -4,6 +4,9 @@ import sys
 from pathlib import Path
 from typing import List, Tuple, Dict, Any
 
+# Importa a biblioteca 'statistics' para calcular média e desvio padrão
+import statistics 
+
 import matplotlib.pyplot as plt
 
 # Importa dos seus módulos base
@@ -20,10 +23,8 @@ from hill_climbing import (
 
 # __file__ é o caminho deste script
 SCRIPT_DIR = Path(__file__).resolve().parent
-
 # Assume que este script está em uma pasta 'src' ou 'analise'
 PROJECT_ROOT = SCRIPT_DIR.parent
-
 # Define o local para salvar os gráficos
 RESULTS_DIR = PROJECT_ROOT / "resultados"
 
@@ -31,10 +32,13 @@ RESULTS_DIR = PROJECT_ROOT / "resultados"
 # ------------------------------------------------------------
 # 10. FUNÇÃO AUXILIAR DE PLOTAGEM
 # ------------------------------------------------------------
-def _plot_and_save(x_data, y_data, title, y_label, filename: Path):
-    """Função helper interna para gerar e salvar gráficos de barra."""
+def _plot_and_save(x_data, y_data, title, y_label, filename: Path, y_error=None):
+    
     plt.figure()  # Cria uma nova figura
-    plt.bar(x_data, y_data)
+    
+    # Adiciona 'yerr' e 'capsize' se 'y_error' for fornecido
+    plt.bar(x_data, y_data, yerr=y_error, capsize=5) 
+    
     plt.ylabel(y_label)
     plt.title(title)
     
@@ -51,21 +55,15 @@ def _plot_and_save(x_data, y_data, title, y_label, filename: Path):
 # 11. EXECUÇÃO DE DEMONSTRAÇÃO (SEED FIXA)
 # ------------------------------------------------------------
 def run_demo() -> List[Tuple[str, int, int, float]]:
-    """
-    Executa cada algoritmo uma vez com seed fixa (42) para
-    demonstração e comparação direta.
-    """
-    # Define uma 'seed' (semente) fixa para garantir que os resultados
-    # desta função sejam sempre os mesmos (reprodutibilidade)
+    
+    # (O código original desta função está 100% correto e não precisa
+    # de alterações, pois a lógica de captura de 3 itens ainda funciona)
+    
     random.seed(42)
-    
     print("--- Execução Única (Seed 42) ---")
-    
-    # Gera um tabuleiro inicial fixo para todos os algoritmos
     board_inicial_demo = initial_board()
     print(f"Tabuleiro Inicial (Conflitos: {conflicts(board_inicial_demo)})")
     
-    # Lista de tuplas contendo (Nome do Algoritmo, Função a ser chamada)
     algoritmos = [
         ("Simples", hill_climbing_simple),
         ("Laterais", hill_climbing_sideways),
@@ -77,26 +75,34 @@ def run_demo() -> List[Tuple[str, int, int, float]]:
     for nome, func in algoritmos:
         start = time.time()
         
-        # Chama a função do algoritmo (ex: hill_climbing_simple())
-        # Passa o 'board_inicial_demo' para garantir que todos comecem igual
-        result = func(board=board_inicial_demo.copy()) 
+        # O 'board_inicial_demo.copy()' é importante aqui
+        if nome == "Reinício":
+            # O 'random_restart' não aceita um 'board' inicial,
+            # pois sua lógica é justamente criar novos.
+            # Para a demo, forçamos o primeiro 'run' a ser com o board.
+            # (Assumindo que o primeiro 'simple_climb' usará o board)
+            # Para simplificar e não alterar a lógica, vamos chamá-lo
+            # da forma padrão (ele vai ignorar o board_inicial_demo).
+             result = func() 
+        else:
+             result = func(board=board_inicial_demo.copy())
         
         end = time.time()
 
-        # Desempacota a tupla de retorno padrão: (board, conflitos, iterações, ...)
-        # O [0], [1], [2] garante que pegamos os 3 primeiros itens,
-        # ignorando o 4º item (restarts) do 'random_restart'
+        # Desempacota a tupla de retorno
+        # (board, conflitos, iterações)
+        # Isso funciona pois intencionalmente ignora o 4º item (restarts)
+        # que 'hill_climbing_random_restart' retorna.
         board_final, conflitos_finais, iteracoes = result[0], result[1], result[2]
         tempo = end - start
 
         print(f"\nAlgoritmo: {nome}")
-        print(f"   Conflitos finais: {conflitos_finais}")
-        print(f"   Iterações: {iteracoes}")
-        print(f"   Tempo: {tempo:.4f}s")
-        if board_final:
+        print(f"    Conflitos finais: {conflitos_finais}")
+        print(f"    Iterações: {iteracoes}")
+        print(f"    Tempo: {tempo:.4f}s")
+        if board_final and conflitos_finais == 0:
             print_board(board_final)
             
-        # Armazena os dados para os gráficos da demo
         results.append((nome, conflitos_finais, iteracoes, tempo))
 
     return results
@@ -104,15 +110,10 @@ def run_demo() -> List[Tuple[str, int, int, float]]:
 # ------------------------------------------------------------
 # 12. EXECUÇÃO DE EXPERIMENTOS (MÚLTIPLAS RODADAS)
 # ------------------------------------------------------------
-def run_experiments(n_runs: int = 30) -> Dict[str, List[Tuple[int, int, float]]]:
-    """
-    Executa os algoritmos 'n_runs' vezes com seeds aleatórias
-    para coletar estatísticas de desempenho.
-    """
+def run_experiments(n_runs: int = 30) -> Dict[str, List[Tuple[int, int, float, int]]]:
+    
     print(f"\n--- Rodando Experimentos ({n_runs} execuções) ---")
     
-    # Dicionário para agrupar resultados por algoritmo
-    # Cada lista armazenará tuplas de (conflitos, iteracoes, tempo)
     results = {
         "Simples": [],
         "Laterais": [],
@@ -120,31 +121,31 @@ def run_experiments(n_runs: int = 30) -> Dict[str, List[Tuple[int, int, float]]]
     }
 
     for i in range(n_runs):
-        # Imprime uma mensagem de progresso a cada 5 execuções
         if (i + 1) % 5 == 0:
-            print(f"   ...execução {i+1}/{n_runs}")
+            print(f"    ...execução {i+1}/{n_runs}")
             
-        # Reseta a seed (para None), fazendo com que o 'random'
-        # use uma seed nova (baseada no tempo) a cada iteração.
-        # Isso garante que cada 'run' seja diferente.
         random.seed() 
 
         # --- Simples ---
         start = time.time()
-        # Não passamos 'board', então ele gera um aleatório
         _, conf, it = hill_climbing_simple() 
-        results["Simples"].append((conf, it, time.time() - start))
+        #  Adiciona '0' para restarts
+        results["Simples"].append((conf, it, time.time() - start, 0))
 
         # --- Laterais ---
         start = time.time()
         _, conf, it = hill_climbing_sideways()
-        results["Laterais"].append((conf, it, time.time() - start))
+        #  Adiciona '0' para restarts
+        results["Laterais"].append((conf, it, time.time() - start, 0))
 
         # --- Reinício Aleatório ---
         start = time.time()
-        # O retorno é (board, conf, it, restarts) - pegamos os 3 primeiros
-        _, conf, it, _ = hill_climbing_random_restart() 
-        results["Reinício"].append((conf, it, time.time() - start))
+        
+        #  Captura o 4º valor (restarts)
+        _, conf, it, restarts = hill_climbing_random_restart() 
+        
+        #  Salva o valor 'restarts'
+        results["Reinício"].append((conf, it, time.time() - start, restarts))
 
     print("Experimentos concluídos.")
     return results
@@ -154,15 +155,14 @@ def run_experiments(n_runs: int = 30) -> Dict[str, List[Tuple[int, int, float]]]
 # ------------------------------------------------------------
 def main(n_runs: int):
     
-    # Garante que a pasta 'resultados' exista antes de salvar
     RESULTS_DIR.mkdir(exist_ok=True)
 
     # --- 1. Execução Única (Demo) ---
+    
     demo_results = run_demo()
     
-    # 'zip(*...)' é um truque para "desempacotar" a lista de tuplas.
-    # Transforma: [('A', 1, 0.1), ('B', 0, 0.2)]
-    # Em:         [('A', 'B'), (1, 0), (0.1, 0.2)]
+    # O zip vai criar 4 listas, mas só usamos as 3 primeiras
+    # (nome, conflitos, iterações, tempo)
     names, conflicts_list, iters_list, times_list = zip(*demo_results)
     
     print("\nGerando gráficos da execução única...")
@@ -179,28 +179,67 @@ def main(n_runs: int):
     exp_results = run_experiments(n_runs)
     labels = list(exp_results.keys()) # ['Simples', 'Laterais', 'Reinício']
 
-    # Calcula as métricas usando 'list comprehensions'
+    #  Extrai listas de dados brutos para estatística
+    # (v[0]=conflitos, v[1]=iterações, v[2]=tempo, v[3]=restarts)
     
-    # Para cada algoritmo 'k' em 'labels', calcula a média do tempo
-    # v[2] é o tempo (conflitos=0, iterações=1, tempo=2)
-    avg_times = [sum(v[2] for v in exp_results[k]) / n_runs for k in labels]
+    times_data = {k: [v[2] for v in exp_results[k]] for k in labels}
+    iters_data = {k: [v[1] for v in exp_results[k]] for k in labels}
     
-    # v[1] são as iterações
-    avg_iters = [sum(v[1] for v in exp_results[k]) / n_runs for k in labels]
+    # Apenas 'Reinício' terá valores > 0 aqui
+    restarts_data = [v[3] for v in exp_results["Reinício"]] 
+
+    #  Calcula médias E desvio padrão
+    avg_times = [statistics.mean(times_data[k]) for k in labels]
+    std_times = [statistics.stdev(times_data[k]) for k in labels]
     
-    # v[0] são os conflitos. 'sum(1 ... if v[0] == 0)' conta quantos sucessos
+    avg_iters = [statistics.mean(iters_data[k]) for k in labels]
+    std_iters = [statistics.stdev(iters_data[k]) for k in labels]
+    
+    
     success_rate = [sum(1 for v in exp_results[k] if v[0] == 0) / n_runs * 100 for k in labels]
 
+    #  Calcula estatísticas de reinício
+    avg_restarts = statistics.mean(restarts_data)
+    std_restarts = statistics.stdev(restarts_data)
+
+    #  Imprime os resultados estatísticos no console
+    print("\n--- Resultados Estatísticos (Média ± Desvio Padrão) ---")
+    print(f"Baseado em {n_runs} execuções.\n")
+    
+    for i, k in enumerate(labels):
+        print(f"Algoritmo: {k}")
+        print(f"  Taxa de Sucesso: {success_rate[i]:.1f}%")
+        print(f"  Tempo Médio:     {avg_times[i]:.4f} ± {std_times[i]:.4f} s")
+        print(f"  Iterações Médias: {avg_iters[i]:.2f} ± {std_iters[i]:.2f}")
+        if k == "Reinício":
+            print(f"  Reinícios Médios: {avg_restarts:.2f} ± {std_restarts:.2f}")
+        print("-" * 30)
+
+
     print("\nGerando gráficos dos experimentos...")
+    
+    
     _plot_and_save(labels, avg_times, f"Tempo Médio ({n_runs} execuções)", "Tempo (s)", 
-                   RESULTS_DIR / "exp_tempo_medio.png")
+                   RESULTS_DIR / "exp_tempo_medio.png", y_error=std_times)
                    
+    
     _plot_and_save(labels, avg_iters, f"Iterações Médias ({n_runs} execuções)", "Iterações", 
-                   RESULTS_DIR / "exp_iteracoes_medias.png")
+                   RESULTS_DIR / "exp_iteracoes_medias.png", y_error=std_iters)
                    
+    # (Gráfico de sucesso não precisa de barra de erro)
     _plot_and_save(labels, success_rate, f"Taxa de Sucesso ({n_runs} execuções)", "% Sucesso", 
                    RESULTS_DIR / "exp_taxa_sucesso.png")
                    
+    # Gráfico específico para a média de reinícios
+    _plot_and_save(
+        ["Reinício Aleatório"],  # Lista com um único item
+        [avg_restarts],          # Lista com um único item
+        f"Média de Reinícios ({n_runs} execuções)", 
+        "Nº de Reinícios", 
+        RESULTS_DIR / "exp_restarts_medio.png",
+        y_error=[std_restarts] # Lista com um único item
+    )
+    
     print(f"\nAnálise concluída. Todos os gráficos salvos em '{RESULTS_DIR.resolve()}'")
 
 
@@ -208,18 +247,10 @@ def main(n_runs: int):
 # 14. PONTO DE ENTRADA DO SCRIPT
 # ------------------------------------------------------------
 if __name__ == "__main__":
-    # Esta parte só executa se o script for chamado diretamente
-    # (ex: python run_analysis.py)
-    
-    # Permite customizar o N de execuções via CLI (ex: python run_analysis.py 50)
-    # Senão, usa 30 como padrão.
     try:
-        # Pega o primeiro argumento da linha de comando (sys.argv[0] é o nome do script)
         n = int(sys.argv[1]) if len(sys.argv) > 1 else 30
     except ValueError:
-        # Se o usuário digitar algo que não é um número (ex: python run_analysis.py "abc")
         print("Argumento inválido. Usando N=30.")
         n = 30
         
-    # Inicia o programa principal
     main(n_runs=n)
